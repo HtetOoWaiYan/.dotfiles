@@ -6,5 +6,10 @@ vim.cmd [[packadd packer.nvim]]
 return require('packer').startup(function(use)
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
+
+  -- Tools
+  use 'github/copilot.vim'
+
+  -- Theme
   use 'saltdotac/citylights.vim'
 end)
