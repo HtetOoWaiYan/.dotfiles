@@ -7,7 +7,9 @@ local nmap = Remap.nmap
 
 inoremap("jk", "<Esc>")
 
-nnoremap("<leader>nrw", "<cmd>Ex<CR>") -- Netrw
+nnoremap("<leader>rw", "<cmd>Ex<CR>") -- Netrw
+nnoremap("<C-p>", "<cmd>Telescope find_files<CR>") -- Telescope
+
 nnoremap("<leader><CR>", "o<ESC>")    -- Insert blank line below
 nnoremap("<leader>y", "\"+y")         -- Yank to system clipboard
 nnoremap("<leader>Y", "gg\"+yG``zz")  -- Yank whole file to system clipboard

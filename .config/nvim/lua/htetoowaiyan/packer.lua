@@ -7,9 +7,33 @@ return require('packer').startup(function(use)
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 
-  -- Tools
-  use 'github/copilot.vim'
-
   -- Theme
   use 'saltdotac/citylights.vim'
+
+  -- Glorified autocomplete
+  use 'github/copilot.vim'
+
+  -- Fuzzy finder
+  use {
+      'nvim-telescope/telescope.nvim',
+      requires = { 'nvim-lua/plenary.nvim' },
+  }
+
+  -- Add-ons
+  use 'tpope/vim-surround'
+
+  -- LSP
+  use 'neovim/nvim-lspconfig'
+
+  -- Treesitter
+  use {
+      'nvim-treesitter/nvim-treesitter',
+      run = ':TSUpdate'
+  }
+
+  -- Statusline
+  use {
+      'nvim-lualine/lualine.nvim',
+      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+  }
 end)
