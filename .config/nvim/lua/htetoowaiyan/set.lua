@@ -18,4 +18,9 @@ vim.opt.incsearch = true
 vim.opt.wrap = false
 vim.opt.scrolloff = 8
 
+vim.opt.signcolumn = "yes"
+
+vim.opt.swapfile = false
+vim.opt.backup = false
+
 vim.g.mapleader = " "
