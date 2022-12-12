@@ -15,6 +15,7 @@ return require('packer').startup(function(use)
 
   -- Add-ons
   use 'tpope/vim-surround'
+  use 'tpope/vim-commentary'
 
   -- LSP
   use 'neovim/nvim-lspconfig'
