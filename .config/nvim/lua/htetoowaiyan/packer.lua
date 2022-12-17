@@ -4,6 +4,10 @@ return require('packer').startup(function(use)
   -- Theme
   use 'saltdotac/citylights.vim'
 
+  -- Add-ons
+  use 'tpope/vim-surround'
+  use 'tpope/vim-commentary'
+
   -- Glorified autocomplete
   use 'github/copilot.vim'
 
@@ -13,20 +17,28 @@ return require('packer').startup(function(use)
       requires = { 'nvim-lua/plenary.nvim' },
   }
 
-  -- Add-ons
-  use 'tpope/vim-surround'
-  use 'tpope/vim-commentary'
+  -- LSP, Autocomplete, Snippet
+  use {
+      'VonHeikemen/lsp-zero.nvim',
+      requires = {
+          -- LSP Support
+          {'neovim/nvim-lspconfig'},
+          {'williamboman/mason.nvim'},
+          {'williamboman/mason-lspconfig.nvim'},
 
-  -- LSP
-  use 'neovim/nvim-lspconfig'
+          -- Autocompletion
+          {'hrsh7th/nvim-cmp'},
+          {'hrsh7th/cmp-buffer'},
+          {'hrsh7th/cmp-path'},
+          {'saadparwaiz1/cmp_luasnip'},
+          {'hrsh7th/cmp-nvim-lsp'},
+          {'hrsh7th/cmp-nvim-lua'},
 
-  -- Autocomplete
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/nvim-cmp'
-  use 'L3MON4D3/LuaSnip'
-  use 'saadparwaiz1/cmp_luasnip'
+          -- Snippets
+          {'L3MON4D3/LuaSnip'},
+          {'rafamadriz/friendly-snippets'},
+      }
+  }
 
   -- Treesitter
   use {
