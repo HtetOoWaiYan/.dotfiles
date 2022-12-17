@@ -185,12 +185,12 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
-# Colors (Omni) https://github.com/eendroroy/alacritty-theme/blob/master/themes/omni.yml
+# Colors (city-lights)
 colors:
   # Default colors
   primary:
-    background: '0x191622'
-    foreground: '0xe1e1e6'
+    background: '0x171d23'
+    foreground: '0xffffff'
 
     # Bright and dim foreground colors
     #
@@ -211,8 +211,8 @@ colors:
   #  text: CellBackground
   #  cursor: CellForeground
   cursor:
-    text: '0x191622'
-    cursor: '0xf8f8f2'
+    text:   '0xfafafa'
+    cursor: '0x008b94'
 
   # Vi mode cursor colors
   #
@@ -284,39 +284,40 @@ colors:
   #  text: CellBackground
   #  background: CellForeground
 
+  # Normal colors
   normal:
-    black: '0x000000'
-    red: '0xff5555'
-    green: '0x50fa7b'
-    yellow: '0xeffa78'
-    blue: '0xbd93f9'
-    magenta: '0xff79c6'
-    cyan: '0x8d79ba'
-    white: '0xbfbfbf'
+    black:   '0x333f4a'
+    red:     '0xd95468'
+    green:   '0x8bd49c'
+    blue:    '0x539afc'
+    magenta: '0xb62d65'
+    cyan:    '0x70e1e8'
+    white:   '0xb7c5d3'
 
+  # Bright colors
   bright:
-    black: '0x4d4d4d'
-    red: '0xff6e67'
-    green: '0x5af78e'
-    yellow: '0xeaf08d'
-    blue: '0xcaa9fa'
-    magenta: '0xff92d0'
-    cyan: '0xaa91e3'
-    white: '0xe6e6e6'
-
-  # Dim colors
-  #
-  # If the dim colors are not set, they will be calculated automatically based
-  # on the `normal` colors.
-  dim:
-    black: '0x000000'
-    red: '0xa90000'
-    green: '0x049f2b'
-    yellow: '0xa3b106'
-    blue: '0x530aba'
-    magenta: '0xbb006b'
-    cyan: '0x433364'
-    white: '0x5f5f5f'
+    black:   '0x41505e'
+    red:     '0xd95468'
+    green:   '0x8bd49c'
+    yellow:  '0xebbf83'
+    blue:    '0x5ec4ff'
+    magenta: '0xe27e8d'
+    cyan:    '0x70e1e8'
+    white:   '0xffffff'
+  
+  ## Dim colors
+  ##
+  ## If the dim colors are not set, they will be calculated automatically based
+  ## on the `normal` colors.
+  #dim:
+  #  black:   '0x000000'
+  #  red:     '0xa90000'
+  #  green:   '0x049f2b'
+  #  yellow:  '0xa3b106'
+  #  blue:    '0x530aba'
+  #  magenta: '0xbb006b'
+  #  cyan:    '0x433364'
+  #  white:   '0x5f5f5f'
 
   # Indexed Colors
   #
