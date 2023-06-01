@@ -7,6 +7,12 @@ return require('packer').startup(function(use)
     -- Add-ons
     use 'tpope/vim-surround'
     use 'tpope/vim-commentary'
+    use {
+        "windwp/nvim-autopairs",
+        config = function()
+            require("nvim-autopairs").setup {}
+        end
+    }
 
     -- Glorified autocomplete
     use { "zbirenbaum/copilot.lua" }
