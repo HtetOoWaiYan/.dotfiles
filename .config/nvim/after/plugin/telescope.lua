@@ -3,8 +3,8 @@ local actions = require("telescope.actions")
 local Remap = require("htetoowaiyan.keymap")
 local nnoremap = Remap.nnoremap
 
-nnoremap('<leader><C-p>', builtin.find_files, {})
-nnoremap('<C-p>', builtin.git_files, {})
+nnoremap('<C-p>', builtin.find_files, {})
+nnoremap('<leader><C-p>', builtin.git_files, {})
 nnoremap('<leader>ps', function()
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 end)
