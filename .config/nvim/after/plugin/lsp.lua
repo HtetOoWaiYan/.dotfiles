@@ -1,12 +1,44 @@
-local lsp = require("lsp-zero")
+local lsp = require('lsp-zero').preset({})
 
-lsp.preset("recommended")
+lsp.on_attach(function(client, bufnr)
+    lsp.default_keymaps({ buffer = bufnr })
+    local opts = { buffer = bufnr }
+
+    vim.keymap.set({ 'n', 'x' }, 'gq', function()
+        vim.lsp.buf.format({ async = false, timeout_ms = 10000 })
+    end, opts)
+end)
 
 lsp.ensure_installed({
     -- 'tsserver',
     -- 'eslint',
-    'sumneko_lua',
-    'rust_analyzer',
+    'lua_ls',
+    'rust_analyzer'
+})
+
+require 'lspconfig'.lua_ls.setup {
+    settings = {
+        Lua = {
+            diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = { 'vim' },
+            },
+        },
+    },
+}
+
+lsp.format_on_save({
+    format_opts = {
+        async = false,
+        timeout_ms = 10000,
+    },
+    servers = {
+        ['lua_ls'] = { 'lua' },
+        ['rust_analyzer'] = { 'rust' },
+        -- if you have a working setup with null-ls
+        -- you can specify filetypes it can format.
+        -- ['null-ls'] = {'javascript', 'typescript'},
+    }
 })
 
 lsp.setup()
