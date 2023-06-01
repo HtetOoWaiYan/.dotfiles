@@ -9,7 +9,14 @@ return require('packer').startup(function(use)
     use 'tpope/vim-commentary'
 
     -- Glorified autocomplete
-    use 'github/copilot.vim'
+    use { "zbirenbaum/copilot.lua" }
+    use {
+        "zbirenbaum/copilot-cmp",
+        after = { "copilot.lua" },
+        config = function()
+            require("copilot_cmp").setup()
+        end
+    }
 
     -- Fuzzy finder
     use {

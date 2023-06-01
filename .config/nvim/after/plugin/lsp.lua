@@ -42,3 +42,20 @@ lsp.format_on_save({
 })
 
 lsp.setup()
+
+local cmp = require('cmp')
+
+cmp.setup({
+    sources = {
+        { name = 'copilot' },
+        { name = 'path' },
+        { name = 'nvim_lsp' },
+        { name = 'buffer', keyword_length = 3 },
+    },
+    mapping = {
+        ['<CR>'] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = false,
+        })
+    }
+})
