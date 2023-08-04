@@ -10,8 +10,8 @@ lsp.on_attach(function(client, bufnr)
 end)
 
 lsp.ensure_installed({
-    -- 'tsserver',
-    -- 'eslint',
+    'tsserver',
+    'eslint',
     'lua_ls',
     'rust_analyzer'
 })

@@ -2,7 +2,8 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     -- Theme
-    use 'saltdotac/citylights.vim'
+    -- use 'saltdotac/citylights.vim'
+    use { "catppuccin/nvim", as = "catppuccin" }
 
     -- Add-ons
     use 'tpope/vim-surround'
@@ -29,6 +30,7 @@ return require('packer').startup(function(use)
         'nvim-telescope/telescope.nvim',
         requires = { 'nvim-lua/plenary.nvim' },
     }
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
     -- LSP, Autocomplete, Snippet
     use {
@@ -63,4 +65,10 @@ return require('packer').startup(function(use)
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
+
+    -- Git decorations
+    use { 'lewis6991/gitsigns.nvim' }
+
+    -- Navigation
+    use { 'ThePrimeagen/harpoon' }
 end)
