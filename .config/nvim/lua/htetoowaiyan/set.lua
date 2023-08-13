@@ -24,3 +24,6 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 
 vim.g.mapleader = " "
+
+-- Netrw
+vim.g.netrw_localcopydircmd = "cp -r"

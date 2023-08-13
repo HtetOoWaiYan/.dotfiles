@@ -1,7 +1,7 @@
 local Remap = require("htetoowaiyan.keymap")
 local nnoremap = Remap.nnoremap
 local vnoremap = Remap.vnoremap
-local inoremap = Remap.inoremap
+-- local inoremap = Remap.inoremap
 -- local xnoremap = Remap.xnoremap
 -- local nmap = Remap.nmap
 
@@ -12,11 +12,13 @@ nnoremap("<C-u>", "<C-u>zz") -- Scroll up half page & center cursor
 nnoremap("n", "nzzzv") -- Next search result & center cursor
 nnoremap("N", "Nzzzv") -- Previous search result & center cursor
 
-nnoremap("<leader><CR>", "o<ESC>") -- Insert blank line below
 nnoremap("<leader>y", "\"+y") -- Yank to system clipboard
 nnoremap("<leader>Y", "gg\"+yG``zz") -- Yank whole file to system clipboard
 
-nnoremap("<leader>f", vim.lsp.buf.format) -- Format buffer
+-- nnoremap("<leader>f", vim.lsp.buf.format) -- Format buffer
+
+nnoremap("<leader>[", "<cmd>bprevious<CR>") -- Previous buffer
+nnoremap("<leader>]", "<cmd>bnext<CR>") -- Next buffer
 
 vnoremap("<leader>p", "\"_dP") -- Paste on selected text
 vnoremap("<leader>y", "\"+y") -- Yank selection to system clipboard

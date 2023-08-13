@@ -25,7 +25,7 @@ return require('packer').startup(function(use)
         end
     }
 
-    -- Fuzzy finder
+    -- Glorified fuzzy finder
     use {
         'nvim-telescope/telescope.nvim',
         requires = { 'nvim-lua/plenary.nvim' },
@@ -35,22 +35,24 @@ return require('packer').startup(function(use)
     -- LSP, Autocomplete, Snippet
     use {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v2.x',
+        branch = 'dev-v3',
         requires = {
             -- LSP Support
             { 'neovim/nvim-lspconfig' }, -- Required
-            { -- Optional
-                'williamboman/mason.nvim',
-                run = function()
-                    pcall(vim.cmd, 'MasonUpdate')
-                end,
-            },
-            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+
+            --- Uncomment these if you want to manage LSP servers from neovim
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
 
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' }, -- Required
             { 'hrsh7th/cmp-nvim-lsp' }, -- Required
+            { 'hrsh7th/cmp-buffer' },
             { 'L3MON4D3/LuaSnip' }, -- Required
+
+            -- Formatting
+            { 'jose-elias-alvarez/null-ls.nvim' },
+            { 'MunifTanjim/prettier.nvim' },
         }
     }
 

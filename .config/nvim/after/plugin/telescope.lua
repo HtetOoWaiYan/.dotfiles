@@ -10,6 +10,7 @@ nnoremap('<leader>fc', builtin.commands, {})
 nnoremap('<leader>fch', builtin.command_history, {})
 nnoremap('<leader>fm', builtin.marks, {})
 nnoremap('<leader>fq', builtin.quickfix, {})
+nnoremap('<leader>fg', builtin.git_status, {})
 
 require("telescope").setup()
 
