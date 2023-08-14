@@ -27,3 +27,6 @@ vim.g.mapleader = " "
 
 -- Netrw
 vim.g.netrw_localcopydircmd = "cp -r"
+
+-- CamelCaseMotion.vim
+vim.g.camelcasemotion_key = "<leader>"
