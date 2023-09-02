@@ -34,7 +34,7 @@ lsp.format_mapping('<leader>f', {
         -- ['tsserver'] = { 'javascript', 'typescript' },
         -- if you have a working setup with null-ls
         -- you can specify filetypes it can format.
-        ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+        ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
     }
 })
 
@@ -46,7 +46,7 @@ lsp.format_on_save({
     servers = {
         ['lua_ls'] = { 'lua' },
         ['rust_analyzer'] = { 'rust' },
-        ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+        ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
     }
 })
 
