@@ -17,7 +17,7 @@ return require('packer').startup(function(use)
     use 'bkad/CamelCaseMotion'
 
     -- Glorified autocomplete
-    use { "zbirenbaum/copilot.lua" }
+    use "zbirenbaum/copilot.lua"
     use {
         "zbirenbaum/copilot-cmp",
         after = { "copilot.lua" },
@@ -57,6 +57,9 @@ return require('packer').startup(function(use)
         }
     }
 
+    -- File icons
+    use 'nvim-tree/nvim-web-devicons'
+
     -- Treesitter
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -66,12 +69,27 @@ return require('packer').startup(function(use)
     -- Statusline
     use {
         'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+        requires = { 'nvim-tree/nvim-web-devicons', opt = true }
     }
 
     -- Git decorations
-    use { 'lewis6991/gitsigns.nvim' }
+    use 'lewis6991/gitsigns.nvim'
 
     -- Navigation
-    use { 'ThePrimeagen/harpoon' }
+    use 'ThePrimeagen/harpoon'
+
+    -- Netrw enhancement
+    use 'tpope/vim-vinegar'
+    use 'prichrd/netrw.nvim'
+
+    -- File explorer
+    use {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+        }
+    }
 end)

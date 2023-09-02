@@ -4,8 +4,9 @@ local vnoremap = Remap.vnoremap
 -- local inoremap = Remap.inoremap
 -- local xnoremap = Remap.xnoremap
 -- local nmap = Remap.nmap
-
-nnoremap("<C-n>", "<cmd>Ex<CR>") -- Netrw
+--
+-- Netrw
+nnoremap("<C-n>", "<cmd>Ex<CR>")
 
 nnoremap("<C-d>", "<C-d>zz") -- Scroll down half page & center cursor
 nnoremap("<C-u>", "<C-u>zz") -- Scroll up half page & center cursor
@@ -25,3 +26,6 @@ vnoremap("<leader>y", "\"+y") -- Yank selection to system clipboard
 
 vnoremap("<C-j>", ":m '>+1<CR>gv=gv") -- Move selected line up
 vnoremap("<C-k>", ":m '<-2<CR>gv=gv") -- Move selected line down
+
+-- Neotree
+nnoremap("<C-e>", "<cmd>Neotree toggle<CR>")
