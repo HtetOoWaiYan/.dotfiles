@@ -15,7 +15,7 @@ vim.opt.smartindent = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.scrolloff = 8
 
 vim.opt.signcolumn = "yes"
@@ -30,3 +30,8 @@ vim.g.netrw_localcopydircmd = "cp -r"
 
 -- CamelCaseMotion.vim
 vim.g.camelcasemotion_key = "<leader>"
+
+-- denols
+vim.g.markdown_fenced_languages = {
+    "ts=typescript"
+}
