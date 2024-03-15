@@ -18,7 +18,7 @@ return {
         { 'L3MON4D3/LuaSnip' }, -- Required
 
         -- Formatting
-        { 'jose-elias-alvarez/null-ls.nvim' },
+        { 'nvimtools/none-ls.nvim' },
         { 'MunifTanjim/prettier.nvim' },
     },
     config = function()
@@ -55,6 +55,28 @@ return {
                     require('lspconfig').denols.setup {
                         on_attach = lsp.on_attach,
                         root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock"),
+                    }
+                end,
+                tailwindcss = function()
+                    require('lspconfig').tailwindcss.setup {
+                        on_attach = lsp.on_attach,
+                        root_dir = require('lspconfig.util').root_pattern("tailwind.config.js", "tailwind.config.ts"),
+                        settings = {
+                            tailwindCSS = {
+                                classAttributes = { "class", "className", "class:list", "classList", "ngClass",
+                                    "extendedClassName" },
+                                lint = {
+                                    cssConflict = "warning",
+                                    invalidApply = "error",
+                                    invalidConfigPath = "error",
+                                    invalidScreen = "error",
+                                    invalidTailwindDirective = "error",
+                                    invalidVariant = "error",
+                                    recommendedVariantOrder = "warning"
+                                },
+                                validate = true
+                            }
+                        }
                     }
                 end,
             },

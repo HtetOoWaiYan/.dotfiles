@@ -41,6 +41,12 @@ return {
                     theme = "catppuccin"
                 },
                 sections = {
+                    lualine_c = { {
+                        "harpoon2",
+                        -- icon = '♥',
+                        indicators = { "n", "m", "u", "i" },
+                        active_indicators = { "N", "M", "U", "I" },
+                    } },
                     lualine_x = { "encoding", { "fileformat", symbols = { unix = "" } }, "filetype" },
                 },
             }

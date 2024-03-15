@@ -1,22 +1,29 @@
 -- Navigation
 
 return {
-    'ThePrimeagen/harpoon',
-    config = function()
-        require("harpoon").setup()
+    "letieu/harpoon-lualine",
+    dependencies = {
+        {
+            "ThePrimeagen/harpoon",
+            branch = "harpoon2",
+            config = function()
+                local harpoon = require("harpoon")
 
-        local Remap = require("htetoowaiyan.keymap")
-        local nnoremap = Remap.nnoremap
+                -- REQUIRED
+                harpoon:setup()
+                -- REQUIRED
 
-        local mark = require("harpoon.mark")
-        local ui = require("harpoon.ui")
+                local Remap = require("htetoowaiyan.keymap")
+                local nnoremap = Remap.nnoremap
 
-        nnoremap('<leader>a', mark.add_file)
-        nnoremap('<C-h>', ui.toggle_quick_menu)
-        nnoremap('<leader>n', function() ui.nav_file(1) end)
-        nnoremap('<leader>m', function() ui.nav_file(2) end)
-        nnoremap('<leader>u', function() ui.nav_file(3) end)
-        nnoremap('<leader>i', function() ui.nav_file(4) end)
-    end
+                nnoremap('<leader>a', function() harpoon:list():append() end)
+                nnoremap('<C-h>', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+                nnoremap('<leader>n', function() harpoon:list():select(1) end)
+                nnoremap('<leader>m', function() harpoon:list():select(2) end)
+                nnoremap('<leader>u', function() harpoon:list():select(3) end)
+                nnoremap('<leader>i', function() harpoon:list():select(4) end)
+            end
+        }
+    },
 
 }
