@@ -8,6 +8,7 @@ local vnoremap = Remap.vnoremap
 -- Netrw
 nnoremap("<C-n>", "<cmd>Ex<CR>")
 
+nnoremap("<leader>V", "^v$h")
 nnoremap("<C-d>", "<C-d>zz") -- Scroll down half page & center cursor
 nnoremap("<C-u>", "<C-u>zz") -- Scroll up half page & center cursor
 nnoremap("n", "nzzzv") -- Next search result & center cursor
