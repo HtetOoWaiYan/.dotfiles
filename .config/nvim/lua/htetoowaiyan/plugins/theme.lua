@@ -9,6 +9,7 @@ return {
         config = function()
             require("catppuccin").setup({
                 flavour = "macchiato", -- latte, frappe, macchiato, mocha
+                -- flavour = "latte", -- latte, frappe, macchiato, mocha
                 show_end_of_buffer = true, -- shows the '~' characters after the end of buffers
                 integrations = {
                     cmp = true,

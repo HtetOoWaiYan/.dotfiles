@@ -2,7 +2,7 @@
 
 return {
     'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x',
+    branch = 'v4.x',
     dependencies = {
         -- LSP Support
         { 'neovim/nvim-lspconfig' }, -- Required
@@ -12,10 +12,10 @@ return {
         { 'williamboman/mason-lspconfig.nvim' },
 
         -- Autocompletion
-        { 'hrsh7th/nvim-cmp' }, -- Required
+        { 'hrsh7th/nvim-cmp' },     -- Required
         { 'hrsh7th/cmp-nvim-lsp' }, -- Required
         { 'hrsh7th/cmp-buffer' },
-        { 'L3MON4D3/LuaSnip' }, -- Required
+        { 'L3MON4D3/LuaSnip' },     -- Required
 
         -- Formatting
         { 'nvimtools/none-ls.nvim' },
@@ -24,37 +24,57 @@ return {
     config = function()
         local lsp = require('lsp-zero')
 
-        lsp.on_attach(function(client, bufnr)
+        local lsp_attach = function(client, bufnr)
             -- see :help lsp-zero-keybindings
             -- to learn the available actions
             lsp.default_keymaps({ buffer = bufnr })
-            -- local opts = { buffer = bufnr }
-        end)
+        end
 
-        lsp.extend_cmp()
+        lsp.extend_lspconfig({
+            capabilities = require('cmp_nvim_lsp').default_capabilities(),
+            lsp_attach = lsp_attach,
+            float_border = 'rounded',
+            sign_text = true,
+        })
 
         require('mason').setup({})
         require('mason-lspconfig').setup({
             -- Replace the language servers listed here
             -- with the ones you want to install
-            ensure_installed = { 'denols', 'tsserver', 'eslint', 'rust_analyzer', 'tailwindcss' },
+            ensure_installed = { 'denols', 'ts_ls', 'eslint', 'rust_analyzer', 'tailwindcss' },
             handlers = {
                 lsp.default_setup,
                 lua_ls = function()
                     -- (Optional) Configure lua language server for neovim
                     require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
                 end,
-                tsserver = function()
-                    require('lspconfig').tsserver.setup({
+                eslint = function()
+                    require('lspconfig').eslint.setup({
                         on_attach = lsp.on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("package.json"),
+                        root_dir = require('lspconfig.util').root_pattern("package.json", ".eslintrc.js", ".eslintrc.mjs"
+                        , ".eslintrc.json")
+                    })
+                end,
+                ts_ls = function()
+                    require('lspconfig').ts_ls.setup({
+                        on_attach = lsp.on_attach,
+                        -- root_dir = require('lspconfig.util').root_pattern("package.json"),
+                        root_dir = function(fname)
+                            local util = require('lspconfig.util')
+                            -- Check if the project has package.json but not deno.json, deno.jsonc, or deno.lock
+                            if util.root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql")(fname) then
+                                return nil
+                            end
+                            return util.root_pattern("package.json")(fname)
+                        end,
                         single_file_support = false,
                     })
                 end,
                 denols = function()
                     require('lspconfig').denols.setup {
                         on_attach = lsp.on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock"),
+                        root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock",
+                            "seed.sql"),
                     }
                 end,
                 tailwindcss = function()
@@ -82,44 +102,6 @@ return {
             },
         })
 
-        lsp.format_mapping('<leader>f', {
-            format_opts = {
-                async = true,
-                timeout_ms = 10000,
-            },
-            servers = {
-                ['lua_ls'] = { 'lua' },
-                ['rust_analyzer'] = { 'rust' },
-                -- ['tsserver'] = { 'javascript', 'typescript' },
-                -- if you have a working setup with null-ls
-                -- you can specify filetypes it can format.
-                ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
-            }
-        })
-
-        lsp.format_on_save({
-            format_opts = {
-                async = false,
-                timeout_ms = 10000,
-            },
-            servers = {
-                ['lua_ls'] = { 'lua' },
-                ['rust_analyzer'] = { 'rust' },
-                ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
-            }
-        })
-
-        local null_ls = require('null-ls')
-
-        null_ls.setup({
-            sources = {
-                -- Replace these with the tools you have installed
-                -- make sure the source name is supported by null-ls
-                -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-                null_ls.builtins.formatting.prettierd,
-            }
-        })
-
         local cmp = require('cmp')
 
         local has_words_before = function()
@@ -130,12 +112,12 @@ return {
 
         cmp.setup({
             sources = {
-                { name = 'copilot', group_index = 2 },
-                { name = 'path', group_index = 2 },
+                { name = 'copilot',  group_index = 2 },
                 { name = 'nvim_lsp', group_index = 2 },
-                { name = 'buffer', keyword_length = 3 },
+                { name = 'path',     group_index = 2 },
+                { name = 'buffer',   keyword_length = 3 },
             },
-            mapping = {
+            mapping = cmp.mapping.preset.insert({
                 -- `Enter` key to confirm completion
                 ['<CR>'] = cmp.mapping.confirm({
                     behavior = cmp.ConfirmBehavior.Replace,
@@ -148,7 +130,7 @@ return {
                         fallback()
                     end
                 end),
-            },
+            }),
             window = {
                 completion = cmp.config.window.bordered(),
                 documentation = cmp.config.window.bordered(),
@@ -191,6 +173,44 @@ return {
                 "typescriptreact",
                 "yaml",
             },
+        })
+
+        local null_ls = require('null-ls')
+
+        null_ls.setup({
+            sources = {
+                -- Replace these with the tools you have installed
+                -- make sure the source name is supported by null-ls
+                -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
+                null_ls.builtins.formatting.prettierd,
+            }
+        })
+
+        lsp.format_mapping('<leader>f', {
+            format_opts = {
+                async = true,
+                timeout_ms = 10000,
+            },
+            servers = {
+                ['lua_ls'] = { 'lua' },
+                ['rust_analyzer'] = { 'rust' },
+                -- ['tsserver'] = { 'javascript', 'typescript' },
+                -- if you have a working setup with null-ls
+                -- you can specify filetypes it can format.
+                ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
+            }
+        })
+
+        lsp.format_on_save({
+            format_opts = {
+                async = false,
+                timeout_ms = 10000,
+            },
+            servers = {
+                ['lua_ls'] = { 'lua' },
+                ['rust_analyzer'] = { 'rust' },
+                ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
+            }
         })
     end
 }

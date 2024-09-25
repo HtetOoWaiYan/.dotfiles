@@ -10,7 +10,12 @@ return {
                 local harpoon = require("harpoon")
 
                 -- REQUIRED
-                harpoon:setup()
+                harpoon:setup({
+                    settings = {
+                        save_on_toggle = true,
+                        sync_on_ui_close = true,
+                    }
+                })
                 -- REQUIRED
 
                 local Remap = require("htetoowaiyan.keymap")
