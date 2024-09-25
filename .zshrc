@@ -82,6 +82,7 @@ unsetopt share_history
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
+# export LC_ALL=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -105,10 +106,21 @@ unsetopt share_history
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vim="nvim"
-alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+alias clip="pbcopy"
+alias myip="curl ifconfig.me"
+alias dfs="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+alias stcache="du -sh ~/Library/Application\ Support/stremio-server/stremio-cache/"
+alias stclear="rm -rf ~/Library/Application\ Support/stremio-server/stremio-cache/*"
+alias patch-spotify="bash <(curl -sSL https://spotx-official.github.io/run.sh)"
+
 
 export PATH="/usr/local/sbin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+export PATH="/Users/htetoowaiyan/.moon/bin:$PATH"
+
+# bun completions
+[ -s "/Users/htetoowaiyan/.bun/_bun" ] && source "/Users/htetoowaiyan/.bun/_bun"
