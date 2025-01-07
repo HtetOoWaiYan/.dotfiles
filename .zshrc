@@ -111,6 +111,8 @@ alias myip="curl ifconfig.me"
 alias dfs="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 alias stcache="du -sh ~/Library/Application\ Support/stremio-server/stremio-cache/"
 alias stclear="rm -rf ~/Library/Application\ Support/stremio-server/stremio-cache/*"
+# alias expatunnel="autossh -M 0 -N expa-origin.tunl"
+alias expatunnel="autossh -M 0 -N f-dev-tunnel.ec2"
 alias patch-spotify="bash <(curl -sSL https://spotx-official.github.io/run.sh)"
 
 
