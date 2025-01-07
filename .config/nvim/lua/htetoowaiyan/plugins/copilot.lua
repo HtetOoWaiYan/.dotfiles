@@ -5,11 +5,17 @@ return {
         "zbirenbaum/copilot.lua",
         config = function()
             require('copilot').setup({
-                suggestion = { enabled = false, auto_trigger = true },
-                panel = { enabled = true, auto_refresh = true }
+                suggestion = { enabled = false, auto_trigger = false },
+                panel = { enabled = false, auto_refresh = true }
             })
         end
     },
+    -- {
+    --     "supermaven-inc/supermaven-nvim",
+    --     config = function()
+    --         require("supermaven-nvim").setup({})
+    --     end,
+    -- },
     {
         "zbirenbaum/copilot-cmp",
         dependencies = { "copilot.lua" },
@@ -19,14 +25,15 @@ return {
     },
     {
         "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "canary",
+        branch = "main",
         dependencies = {
-            { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-            { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
+            { "github/copilot.vim" },                       -- or zbirenbaum/copilot.lua
+            { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
         },
+        build = "make tiktoken",                            -- Only on MacOS or Linux
         opts = {
-            debug = true, -- Enable debugging
-            -- See Configuration section for rest
+            -- See Configuration section for options
+            model = 'claude-3.5-sonnet'
         },
         -- See Commands section for default commands if you want to lazy load on them
     },
