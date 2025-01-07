@@ -21,7 +21,7 @@ return {
                 local Remap = require("htetoowaiyan.keymap")
                 local nnoremap = Remap.nnoremap
 
-                nnoremap('<leader>a', function() harpoon:list():append() end)
+                nnoremap('<leader>a', function() harpoon:list():add() end)
                 nnoremap('<C-h>', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
                 nnoremap('<leader>n', function() harpoon:list():select(1) end)
                 nnoremap('<leader>m', function() harpoon:list():select(2) end)
