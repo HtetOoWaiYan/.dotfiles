@@ -15,6 +15,7 @@ return {
         { 'hrsh7th/nvim-cmp' },     -- Required
         { 'hrsh7th/cmp-nvim-lsp' }, -- Required
         { 'hrsh7th/cmp-buffer' },
+        { 'hrsh7th/cmp-path' },
         { 'L3MON4D3/LuaSnip' },     -- Required
 
         -- Formatting
@@ -113,10 +114,9 @@ return {
         cmp.setup({
             sources = {
                 { name = 'copilot',  group_index = 2 },
-                -- { name = 'supermaven', group_index = 2 },
-                { name = 'nvim_lsp', group_index = 2 },
-                { name = 'path',     group_index = 2 },
-                { name = 'buffer',   keyword_length = 3 },
+                { name = 'nvim_lsp', group_index = 3 },
+                { name = 'path',     group_index = 3 },
+                { name = 'buffer',   keyword_length = 4 },
             },
             mapping = cmp.mapping.preset.insert({
                 -- `Enter` key to confirm completion

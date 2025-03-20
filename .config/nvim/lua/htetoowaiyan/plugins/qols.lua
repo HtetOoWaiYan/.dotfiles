@@ -29,5 +29,8 @@ return {
                 mappings = {}, -- Custom key mappings
             }
         end
-    }
+    },
+
+    -- Color highlighting
+    'norcalli/nvim-colorizer.lua'
 }
