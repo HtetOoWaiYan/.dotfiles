@@ -118,18 +118,27 @@ alias dfs="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 alias expatunnel="autossh -M 0 -N f-dev-tunnel.ec2"
 alias open="explorer.exe"
 
+# linuxbrew
+if ! echo "$PATH" | grep -q "/home/linuxbrew/.linuxbrew/bin"; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # bun completions
 [ -s "/home/howy/.bun/_bun" ] && source "/home/howy/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+if ! echo "$PATH" | grep -q "$BUN_INSTALL/bin"; then
+  export PATH="$BUN_INSTALL/bin:$PATH"
+fi
 
 # moon
-export PATH="$HOME/.moon/bin:$PATH"
+if ! echo "$PATH" | grep -q "$HOME/.moon/bin"; then
+  export PATH="$HOME/.moon/bin:$PATH"
+fi
+
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
