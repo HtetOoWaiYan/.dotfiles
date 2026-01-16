@@ -30,3 +30,5 @@ vnoremap("<C-k>", ":m '<-2<CR>gv=gv") -- Move selected line down
 
 -- Neotree
 nnoremap("<C-e>", "<cmd>Neotree toggle<CR>")
+
+nnoremap("<leader>gl", "<cmd>lua vim.diagnostic.open_float()<CR>")

@@ -1,68 +1,84 @@
--- LSP, Autocomplete, Snippet
-
 return {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v4.x',
-    dependencies = {
-        -- LSP Support
-        { 'neovim/nvim-lspconfig' }, -- Required
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
+            "hrsh7th/nvim-cmp",
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
+            "j-hui/fidget.nvim",
+        },
+        config = function()
+            require("fidget").setup({})
+            require("mason").setup()
+            require("mason-tool-installer").setup({
+                ensure_installed = {
+                    "prettierd",
+                    "stylua",
+                },
+            })
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "ts_ls",
+                    "eslint",
+                    "tailwindcss",
+                    "denols",
+                    "lua_ls",
+                    "rust_analyzer",
+                },
+                automatic_installation = true,
+            })
 
-        --- Uncomment these if you want to manage LSP servers from neovim
-        { 'williamboman/mason.nvim' },
-        { 'williamboman/mason-lspconfig.nvim' },
+            local lspconfig = require("lspconfig")
+            local cmp_nvim_lsp = require("cmp_nvim_lsp")
+            local capabilities = cmp_nvim_lsp.default_capabilities()
 
-        -- Autocompletion
-        { 'hrsh7th/nvim-cmp' },     -- Required
-        { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-        { 'hrsh7th/cmp-buffer' },
-        { 'hrsh7th/cmp-path' },
-        { 'L3MON4D3/LuaSnip' },     -- Required
+            local on_attach = function(client, bufnr)
+                local opts = { buffer = bufnr, remap = false }
+                vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+                vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+                vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+                vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+                vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+                vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+                vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+                vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+                vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+                vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+            end
 
-        -- Formatting
-        { 'nvimtools/none-ls.nvim' },
-        { 'MunifTanjim/prettier.nvim' },
-    },
-    config = function()
-        local lsp = require('lsp-zero')
-
-        local lsp_attach = function(client, bufnr)
-            -- see :help lsp-zero-keybindings
-            -- to learn the available actions
-            lsp.default_keymaps({ buffer = bufnr })
-        end
-
-        lsp.extend_lspconfig({
-            capabilities = require('cmp_nvim_lsp').default_capabilities(),
-            lsp_attach = lsp_attach,
-            float_border = 'rounded',
-            sign_text = true,
-        })
-
-        require('mason').setup({})
-        require('mason-lspconfig').setup({
-            -- Replace the language servers listed here
-            -- with the ones you want to install
-            ensure_installed = { 'denols', 'ts_ls', 'eslint', 'rust_analyzer', 'tailwindcss' },
-            handlers = {
-                lsp.default_setup,
-                lua_ls = function()
-                    -- (Optional) Configure lua language server for neovim
-                    require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
-                end,
-                eslint = function()
-                    require('lspconfig').eslint.setup({
-                        on_attach = lsp.on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("package.json", ".eslintrc.js", ".eslintrc.mjs"
-                        , ".eslintrc.json")
+            require("mason-lspconfig").setup_handlers({
+                function(server_name)
+                    lspconfig[server_name].setup({
+                        capabilities = capabilities,
+                        on_attach = on_attach,
                     })
                 end,
-                ts_ls = function()
-                    require('lspconfig').ts_ls.setup({
-                        on_attach = lsp.on_attach,
-                        -- root_dir = require('lspconfig.util').root_pattern("package.json"),
+                ["lua_ls"] = function()
+                    lspconfig.lua_ls.setup({
+                        capabilities = capabilities,
+                        on_attach = on_attach,
+                        settings = {
+                            Lua = {
+                                diagnostics = {
+                                    globals = { "vim" },
+                                },
+                            },
+                        },
+                    })
+                end,
+                ["ts_ls"] = function()
+                    lspconfig.ts_ls.setup({
+                        capabilities = capabilities,
+                        on_attach = on_attach,
                         root_dir = function(fname)
                             local util = require('lspconfig.util')
-                            -- Check if the project has package.json but not deno.json, deno.jsonc, or deno.lock
                             if util.root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql")(fname) then
                                 return nil
                             end
@@ -71,147 +87,105 @@ return {
                         single_file_support = false,
                     })
                 end,
-                denols = function()
-                    require('lspconfig').denols.setup {
-                        on_attach = lsp.on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock",
-                            "seed.sql"),
-                    }
+                ["denols"] = function()
+                    lspconfig.denols.setup({
+                        capabilities = capabilities,
+                        on_attach = on_attach,
+                        root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql"),
+                    })
                 end,
-                tailwindcss = function()
-                    require('lspconfig').tailwindcss.setup {
-                        on_attach = lsp.on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("tailwind.config.js", "tailwind.config.ts"),
+                ["tailwindcss"] = function()
+                    lspconfig.tailwindcss.setup({
+                        capabilities = capabilities,
+                        on_attach = on_attach,
+                        root_dir = require('lspconfig.util').root_pattern("tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs", "tailwind.config.cjs"),
                         settings = {
                             tailwindCSS = {
-                                classAttributes = { "class", "className", "class:list", "classList", "ngClass",
-                                    "extendedClassName" },
-                                lint = {
-                                    cssConflict = "warning",
-                                    invalidApply = "error",
-                                    invalidConfigPath = "error",
-                                    invalidScreen = "error",
-                                    invalidTailwindDirective = "error",
-                                    invalidVariant = "error",
-                                    recommendedVariantOrder = "warning"
+                                experimental = {
+                                    classRegex = {
+                                        { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                                        { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" }
+                                    },
                                 },
-                                validate = true
-                            }
-                        }
-                    }
+                            },
+                        },
+                    })
                 end,
-            },
-        })
+            })
 
-        local cmp = require('cmp')
+            local cmp = require("cmp")
+            local luasnip = require("luasnip")
 
-        local has_words_before = function()
-            if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-            return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
-        end
-
-        cmp.setup({
-            sources = {
-                { name = 'copilot',  group_index = 2 },
-                { name = 'nvim_lsp', group_index = 3 },
-                { name = 'path',     group_index = 3 },
-                { name = 'buffer',   keyword_length = 4 },
-            },
-            mapping = cmp.mapping.preset.insert({
-                -- `Enter` key to confirm completion
-                ['<CR>'] = cmp.mapping.confirm({
-                    behavior = cmp.ConfirmBehavior.Replace,
-                    select = false,
-                }),
-                ["<Tab>"] = vim.schedule_wrap(function(fallback)
-                    if cmp.visible() and has_words_before() then
-                        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-                    else
-                        fallback()
-                    end
-                end),
-            }),
-            window = {
-                completion = cmp.config.window.bordered(),
-                documentation = cmp.config.window.bordered(),
-            },
-            sorting = {
-                priority_weight = 2,
-                comparators = {
-                    require("copilot_cmp.comparators").prioritize,
-
-                    -- Below is the default comparitor list and order for nvim-cmp
-                    cmp.config.compare.offset,
-                    -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
-                    cmp.config.compare.exact,
-                    cmp.config.compare.score,
-                    cmp.config.compare.recently_used,
-                    cmp.config.compare.locality,
-                    cmp.config.compare.kind,
-                    cmp.config.compare.sort_text,
-                    cmp.config.compare.length,
-                    cmp.config.compare.order,
+            cmp.setup({
+                snippet = {
+                    expand = function(args)
+                        luasnip.lsp_expand(args.body)
+                    end,
                 },
+                mapping = cmp.mapping.preset.insert({
+                    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-Space>'] = cmp.mapping.complete(),
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+                    ['<Tab>'] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        elseif luasnip.expand_or_jumpable() then
+                            luasnip.expand_or_jump()
+                        else
+                            fallback()
+                        end
+                    end, { 'i', 's' }),
+                    ['<S-Tab>'] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { 'i', 's' }),
+                }),
+                sources = cmp.config.sources({
+                    { name = 'nvim_lsp' },
+                    { name = 'luasnip' },
+                }, {
+                    { name = 'buffer' },
+                })
+            })
+        end
+    },
+    {
+        "stevearc/conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
+        keys = {
+            {
+                "<leader>f",
+                function()
+                    require("conform").format({ async = true, lsp_fallback = true })
+                end,
+                mode = "",
+                desc = "Format buffer",
             },
-        })
-
-        local prettier = require("prettier")
-
-        prettier.setup({
-            bin = 'prettierd', -- or `'prettierd'` (v0.23.3+)
-            filetypes = {
-                "css",
-                "graphql",
-                "html",
-                "javascript",
-                "javascriptreact",
-                "json",
-                "less",
-                "markdown",
-                "scss",
-                "typescript",
-                "typescriptreact",
-                "yaml",
+        },
+        opts = {
+            formatters_by_ft = {
+                lua = { "stylua" },
+                javascript = { "prettierd", "prettier", stop_after_first = true },
+                typescript = { "prettierd", "prettier", stop_after_first = true },
+                javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+                typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+                css = { "prettierd", "prettier", stop_after_first = true },
+                html = { "prettierd", "prettier", stop_after_first = true },
+                json = { "prettierd", "prettier", stop_after_first = true },
+                yaml = { "prettierd", "prettier", stop_after_first = true },
+                markdown = { "prettierd", "prettier", stop_after_first = true },
             },
-        })
-
-        local null_ls = require('null-ls')
-
-        null_ls.setup({
-            sources = {
-                -- Replace these with the tools you have installed
-                -- make sure the source name is supported by null-ls
-                -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-                null_ls.builtins.formatting.prettierd,
-            }
-        })
-
-        lsp.format_mapping('<leader>f', {
-            format_opts = {
-                async = true,
-                timeout_ms = 10000,
+            format_on_save = {
+                timeout_ms = 500,
+                lsp_fallback = true,
             },
-            servers = {
-                ['lua_ls'] = { 'lua' },
-                ['rust_analyzer'] = { 'rust' },
-                -- ['tsserver'] = { 'javascript', 'typescript' },
-                -- if you have a working setup with null-ls
-                -- you can specify filetypes it can format.
-                ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
-            }
-        })
-
-        lsp.format_on_save({
-            format_opts = {
-                async = false,
-                timeout_ms = 10000,
-            },
-            servers = {
-                ['lua_ls'] = { 'lua' },
-                ['rust_analyzer'] = { 'rust' },
-                ['null-ls'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'json', 'jsonc' },
-            }
-        })
-    end
+        },
+    }
 }
