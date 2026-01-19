@@ -111,7 +111,7 @@ return {
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "*",
                 callback = function()
-                    local exclude = { "netrw", "qf", "help" }
+                    local exclude = { "netrw", "qf", "help", "minimap", "TelescopePrompt", "TelescopeResults", "lazy", "mason" }
                     if not vim.tbl_contains(exclude, vim.bo.filetype) then
                         map.open()
                     else

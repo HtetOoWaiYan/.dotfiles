@@ -23,17 +23,6 @@ return {
                     "stylua",
                 },
             })
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "ts_ls",
-                    "eslint",
-                    "tailwindcss",
-                    "denols",
-                    "lua_ls",
-                    "rust_analyzer",
-                },
-                automatic_installation = true,
-            })
 
             local lspconfig = require("lspconfig")
             local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -53,64 +42,75 @@ return {
                 vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
             end
 
-            require("mason-lspconfig").setup_handlers({
-                function(server_name)
-                    lspconfig[server_name].setup({
-                        capabilities = capabilities,
-                        on_attach = on_attach,
-                    })
-                end,
-                ["lua_ls"] = function()
-                    lspconfig.lua_ls.setup({
-                        capabilities = capabilities,
-                        on_attach = on_attach,
-                        settings = {
-                            Lua = {
-                                diagnostics = {
-                                    globals = { "vim" },
-                                },
-                            },
-                        },
-                    })
-                end,
-                ["ts_ls"] = function()
-                    lspconfig.ts_ls.setup({
-                        capabilities = capabilities,
-                        on_attach = on_attach,
-                        root_dir = function(fname)
-                            local util = require('lspconfig.util')
-                            if util.root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql")(fname) then
-                                return nil
-                            end
-                            return util.root_pattern("package.json")(fname)
-                        end,
-                        single_file_support = false,
-                    })
-                end,
-                ["denols"] = function()
-                    lspconfig.denols.setup({
-                        capabilities = capabilities,
-                        on_attach = on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql"),
-                    })
-                end,
-                ["tailwindcss"] = function()
-                    lspconfig.tailwindcss.setup({
-                        capabilities = capabilities,
-                        on_attach = on_attach,
-                        root_dir = require('lspconfig.util').root_pattern("tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs", "tailwind.config.cjs"),
-                        settings = {
-                            tailwindCSS = {
-                                experimental = {
-                                    classRegex = {
-                                        { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-                                        { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" }
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "ts_ls",
+                    "eslint",
+                    "tailwindcss",
+                    "denols",
+                    "lua_ls",
+                    "rust_analyzer",
+                },
+                automatic_installation = true,
+                handlers = {
+                    function(server_name)
+                        lspconfig[server_name].setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                        })
+                    end,
+                    ["lua_ls"] = function()
+                        lspconfig.lua_ls.setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                            settings = {
+                                Lua = {
+                                    diagnostics = {
+                                        globals = { "vim" },
                                     },
                                 },
                             },
-                        },
-                    })
-                end,
+                        })
+                    end,
+                    ["ts_ls"] = function()
+                        lspconfig.ts_ls.setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                            root_dir = function(fname)
+                                local util = require('lspconfig.util')
+                                if util.root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql")(fname) then
+                                    return nil
+                                end
+                                return util.root_pattern("package.json")(fname)
+                            end,
+                            single_file_support = false,
+                        })
+                    end,
+                    ["denols"] = function()
+                        lspconfig.denols.setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                            root_dir = require('lspconfig.util').root_pattern("deno.json", "deno.jsonc", "deno.lock", "seed.sql"),
+                        })
+                    end,
+                    ["tailwindcss"] = function()
+                        lspconfig.tailwindcss.setup({
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                            root_dir = require('lspconfig.util').root_pattern("tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs", "tailwind.config.cjs"),
+                            settings = {
+                                tailwindCSS = {
+                                    experimental = {
+                                        classRegex = {
+                                            { [=[cva\(([^)]*)\)]=], [=[["'`]([^"'`]*).*?["'`]]=] },
+                                            { [=[cx\(([^)]*)\)]=], [=[(?:'|"|`)([^']*)(?:'|"|`)]=] }
+                                        },
+                                    },
+                                },
+                            },
+                        })
+                    end,
+                }
             })
 
             local cmp = require("cmp")
