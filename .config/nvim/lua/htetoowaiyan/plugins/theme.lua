@@ -86,6 +86,42 @@ return {
                 end
             }
         end
+    },
+
+    -- Minimap
+    {
+        'echasnovski/mini.map',
+        branch = 'stable',
+        config = function()
+            local map = require('mini.map')
+            map.setup({
+                integrations = {
+                    map.gen_integration.gitsigns(),
+                },
+                symbols = {
+                    encode = map.gen_encode_symbols.dot('4x2'),
+                },
+                window = {
+                    width = 10,
+                    show_integration_count = false,
+                },
+            })
+
+            -- Open by default, but not in netrw
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "*",
+                callback = function()
+                    local exclude = { "netrw", "qf", "help" }
+                    if not vim.tbl_contains(exclude, vim.bo.filetype) then
+                        map.open()
+                    else
+                        map.close()
+                    end
+                end,
+            })
+
+            vim.keymap.set('n', '<leader>mm', map.toggle, { desc = "Toggle Minimap" })
+        end
     }
 
 }
