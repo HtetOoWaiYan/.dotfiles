@@ -107,17 +107,38 @@ return {
                 },
             })
 
-            -- Open by default, but not in netrw
-            vim.api.nvim_create_autocmd("FileType", {
+            -- Open only if there are git changes
+            local function update_map()
+                local exclude = { "netrw", "qf", "help", "minimap", "TelescopePrompt", "TelescopeResults", "lazy", "mason" }
+                if vim.tbl_contains(exclude, vim.bo.filetype) then
+                    map.close()
+                    return
+                end
+
+                local status = vim.b.gitsigns_status_dict
+                local has_changes = status and (
+                    (status.added or 0) > 0 or
+                    (status.changed or 0) > 0 or
+                    (status.removed or 0) > 0
+                )
+
+                if has_changes then
+                    map.open()
+                else
+                    map.close()
+                end
+            end
+
+            vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
                 pattern = "*",
                 callback = function()
-                    local exclude = { "netrw", "qf", "help", "minimap", "TelescopePrompt", "TelescopeResults", "lazy", "mason" }
-                    if not vim.tbl_contains(exclude, vim.bo.filetype) then
-                        map.open()
-                    else
-                        map.close()
-                    end
+                    vim.defer_fn(update_map, 100)
                 end,
+            })
+
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "GitsignsUpdate",
+                callback = update_map,
             })
 
             vim.keymap.set('n', '<leader>mm', map.toggle, { desc = "Toggle Minimap" })
