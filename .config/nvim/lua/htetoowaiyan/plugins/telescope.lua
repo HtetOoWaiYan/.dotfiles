@@ -3,7 +3,7 @@
 return {
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.5',
+        branch = 'master',
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             local builtin = require('telescope.builtin')
@@ -20,7 +20,22 @@ return {
             nnoremap('<leader>fq', builtin.quickfix, {})
             nnoremap('<leader>fg', builtin.git_status, {})
 
-            require("telescope").setup()
+            local actions = require("telescope.actions")
+
+            require("telescope").setup({
+                defaults = {
+                    mappings = {
+                        i = {
+                            ["<C-h>"] = actions.preview_scrolling_left,
+                            ["<C-l>"] = actions.preview_scrolling_right,
+                        },
+                        n = {
+                            ["<C-h>"] = actions.preview_scrolling_left,
+                            ["<C-l>"] = actions.preview_scrolling_right,
+                        }
+                    }
+                }
+            })
 
             require('telescope').load_extension('fzf')
         end
